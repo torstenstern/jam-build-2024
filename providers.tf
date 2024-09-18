@@ -13,11 +13,6 @@ terraform {
   }
 
   backend "s3" {
-    bucket         = var.s3_bucket
-    key            = "codebuild/terraform.tfstate"  # Path inside the S3 bucket
-    region         = var.region
-    encrypt        = true  # Optional, enables server-side encryption
-    #dynamodb_table = "your-dynamodb-lock-table"  # Optional, for state locking
   }
 }
 
