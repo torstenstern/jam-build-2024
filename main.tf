@@ -103,7 +103,7 @@ resource "aws_instance" "linux_ec2" {
     Name = "CodeBuild-Torsten"
   }
 
-  key_name = data.aws_key_pair.vmseries  # Replace with your SSH key pair name
+  key_name = data.aws_key_pair.vmseries.key_name  # Replace with your SSH key pair name
 }
 
 
