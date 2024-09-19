@@ -5,6 +5,15 @@ resource "aws_vpc" "vpc" {
   }
 }
 
+data "aws_key_pair" "vmseries" {
+  include_public_key = true
+
+  filter {
+    name   = "key-name"
+    values = ["lab-key-pair*"]
+  }
+}
+
 #####################################
 
  resource "aws_vpc" "main_vpc" {
@@ -94,7 +103,7 @@ resource "aws_instance" "linux_ec2" {
     Name = "CodeBuild-Torsten"
   }
 
-  key_name = "lab-key-pair"  # Replace with your SSH key pair name
+  key_name = data.aws_key_pair.vmseries  # Replace with your SSH key pair name
 }
 
 
