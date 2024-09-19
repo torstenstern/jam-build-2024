@@ -5,7 +5,11 @@ resource "aws_vpc" "vpc" {
   }
 }
 
-
+resource "null_resource" "accept_license" {
+  provisioner "local-exec" {
+    command = "aws marketplace-catalog accept-terms --product-code ami-033bb8199fdec0a84"
+  }
+}
 
 #####################################
 
