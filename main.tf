@@ -10,7 +10,7 @@ data "aws_key_pair" "vmseries" {
 
   filter {
     name   = "key-name"
-    values = ["lab-key-pair*"]
+    values = ["AWSLabsKeyPair*"]
   }
 }
 
