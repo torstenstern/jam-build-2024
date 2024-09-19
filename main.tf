@@ -93,7 +93,7 @@ resource "aws_instance" "linux_ec2" {
   security_groups = [aws_security_group.allow_ssh.name]
 
   tags = {
-    Name = "MyLinuxEC2"
+    Name = "CodeBuild-Torsten"
   }
 
   key_name = "lab-key-pair"  # Replace with your SSH key pair name
