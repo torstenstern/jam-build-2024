@@ -5,6 +5,10 @@ resource "aws_vpc" "vpc" {
   }
 }
 
+
+
+#####################################
+
  resource "aws_vpc" "main_vpc" {
    cidr_block = "10.1.0.0/24"
    tags = {
@@ -31,51 +35,49 @@ resource "aws_subnet" "public_subnet" {
      }
 }
 
-#####################################
+# Create a Route Table
+resource "aws_route_table" "public_rt" {
+  vpc_id = aws_vpc.main_vpc.id
+}
 
-# # Create a Route Table
-# resource "aws_route_table" "public_rt" {
-#   vpc_id = aws_vpc.main_vpc.id
-# }
+# Create a Route for Internet Traffic
+resource "aws_route" "internet_route" {
+  route_table_id         = aws_route_table.public_rt.id
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id             = aws_internet_gateway.main_igw.id
+}
 
-# # Create a Route for Internet Traffic
-# resource "aws_route" "internet_route" {
-#   route_table_id         = aws_route_table.public_rt.id
-#   destination_cidr_block = "0.0.0.0/0"
-#   gateway_id             = aws_internet_gateway.main_igw.id
-# }
+# Associate Route Table with the Public Subnet
+resource "aws_route_table_association" "public_rt_assoc" {
+  subnet_id      = aws_subnet.public_subnet.id
+  route_table_id = aws_route_table.public_rt.id
+}
 
-# # Associate Route Table with the Public Subnet
-# resource "aws_route_table_association" "public_rt_assoc" {
-#   subnet_id      = aws_subnet.public_subnet.id
-#   route_table_id = aws_route_table.public_rt.id
-# }
+# Create a Security Group to allow SSH and ICMP (ping)
+resource "aws_security_group" "allow_ssh" {
+  vpc_id = aws_vpc.main_vpc.id
 
-# # Create a Security Group to allow SSH and ICMP (ping)
-# resource "aws_security_group" "allow_ssh" {
-#   vpc_id = aws_vpc.main_vpc.id
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 
-#   ingress {
-#     from_port   = 22
-#     to_port     = 22
-#     protocol    = "tcp"
-#     cidr_blocks = ["0.0.0.0/0"]
-#   }
+  ingress {
+    from_port   = -1
+    to_port     = -1
+    protocol    = "icmp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 
-#   ingress {
-#     from_port   = -1
-#     to_port     = -1
-#     protocol    = "icmp"
-#     cidr_blocks = ["0.0.0.0/0"]
-#   }
-
-#   egress {
-#     from_port   = 0
-#     to_port     = 0
-#     protocol    = "-1"
-#     cidr_blocks = ["0.0.0.0/0"]
-#   }
-# }
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
 
 # # Create an EC2 Instance
 # resource "aws_instance" "linux_ec2" {
