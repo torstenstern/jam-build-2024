@@ -12,10 +12,13 @@ resource "aws_vpc" "vpc" {
      }
  }
 
-# # Create an Internet Gateway
-# resource "aws_internet_gateway" "main_igw" {
-#   vpc_id = aws_vpc.main_vpc.id
-# }
+# Create an Internet Gateway
+resource "aws_internet_gateway" "main_igw" {
+  vpc_id = aws_vpc.main_vpc.id
+  tags = {
+     "Name" = "CodeBuid-torsten-testhost"
+     }
+}
 
 # Create a Public Subnet
 resource "aws_subnet" "public_subnet" {
@@ -23,6 +26,9 @@ resource "aws_subnet" "public_subnet" {
   cidr_block        = "10.1.0.0/25"
   # availability_zone = var.region
   # map_public_ip_on_launch = true
+  tags = {
+     "Name" = "CodeBuid-torsten-testhost"
+     }
 }
 
 #####################################
