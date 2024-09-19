@@ -11,6 +11,9 @@ terraform {
       version = "3.2.2"
     }
   }
+  backend "s3" {
+    encrypt        = true
+  }
 }
 
 provider "aws" {
