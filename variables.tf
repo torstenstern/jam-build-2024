@@ -1,7 +1,8 @@
 ### GENERAL
 variable "region" {
   description = "AWS region used to deploy whole infrastructure"
-  type        = "us-west-2"
+  type        = string
+  default     = "us-west-2"
 }
 
 # variable "s3_bucket" {
