@@ -16,7 +16,7 @@ resource "aws_internet_gateway" "main_igw" {
 resource "aws_subnet" "public_subnet" {
   vpc_id            = aws_vpc.main_vpc.id
   cidr_block        = "10.0.1.0/24"
-  availability_zone = "us-east-1a" # Adjust to your region
+  availability_zone = var.region
   map_public_ip_on_launch = true
 }
 
@@ -75,7 +75,7 @@ resource "aws_instance" "linux_ec2" {
     Name = "MyLinuxEC2"
   }
 
-  key_name = "your-key-pair"  # Replace with your SSH key pair name
+  key_name = "lab-key-pair"  # Replace with your SSH key pair name
 }
 
 # Output the Public IP of the instance
