@@ -12,29 +12,20 @@ resource "aws_vpc" "vpc" {
      }
  }
 
+# Create an Internet Gateway
+resource "aws_internet_gateway" "main_igw" {
+  vpc_id = aws_vpc.main_vpc.id
+}
+
+# Create a Public Subnet
+resource "aws_subnet" "public_subnet" {
+  vpc_id            = aws_vpc.main_vpc.id
+  cidr_block        = "10.0.1.0/24"
+  availability_zone = var.region
+  map_public_ip_on_launch = true
+}
+
 #####################################
-
-
-# Create a VPC
-# resource "aws_vpc" "main_vpc" {
-#   cidr_block = "10.0.0.0/16"
-#   tags = {
-#     "Name" = "CodeBuid-torsten-testhost"
-#     }
-# }
-
-# # Create an Internet Gateway
-# resource "aws_internet_gateway" "main_igw" {
-#   vpc_id = aws_vpc.main_vpc.id
-# }
-
-# # Create a Public Subnet
-# resource "aws_subnet" "public_subnet" {
-#   vpc_id            = aws_vpc.main_vpc.id
-#   cidr_block        = "10.0.1.0/24"
-#   availability_zone = var.region
-#   map_public_ip_on_launch = true
-# }
 
 # # Create a Route Table
 # resource "aws_route_table" "public_rt" {
