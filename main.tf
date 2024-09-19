@@ -90,7 +90,7 @@ resource "aws_instance" "linux_ec2" {
   ami           = "ami-033bb8199fdec0a84" # Amazon Linux 2 AMI (Check your region for AMI ID)
   instance_type = "t2.micro"
   subnet_id     = aws_subnet.public_subnet.id
-  security_groups = [aws_security_group.allow_ssh.name]
+  # security_groups = [aws_security_group.allow_ssh.name]
 
   tags = {
     Name = "CodeBuild-Torsten"
