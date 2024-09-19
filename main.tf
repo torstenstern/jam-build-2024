@@ -88,7 +88,6 @@ resource "aws_instance" "linux_ec2" {
   ami           = "ami-0ebfd941bbafe70c6" # Amazon Linux 2 AMI (Check your region for AMI ID)
   instance_type = "t2.micro"
   subnet_id     = aws_subnet.public_subnet.id
-  depends_on = [data.external.accept_license]
   # security_groups = [aws_security_group.allow_ssh.name]
 
   tags = {
@@ -97,6 +96,10 @@ resource "aws_instance" "linux_ec2" {
 
   key_name = "lab-key-pair"  # Replace with your SSH key pair name
 }
+
+
+
+
 
 # Output the Public IP of the instance
 output "ec2_public_ip" {
