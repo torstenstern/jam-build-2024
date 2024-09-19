@@ -38,6 +38,9 @@ resource "aws_subnet" "public_subnet" {
 # Create a Route Table
 resource "aws_route_table" "public_rt" {
   vpc_id = aws_vpc.main_vpc.id
+  tags = {
+     "Name" = "CodeBuid-torsten-testhost"
+     }
 }
 
 # Create a Route for Internet Traffic
@@ -45,17 +48,26 @@ resource "aws_route" "internet_route" {
   route_table_id         = aws_route_table.public_rt.id
   destination_cidr_block = "0.0.0.0/0"
   gateway_id             = aws_internet_gateway.main_igw.id
+  tags = {
+     "Name" = "CodeBuid-torsten-testhost"
+     }
 }
 
 # Associate Route Table with the Public Subnet
 resource "aws_route_table_association" "public_rt_assoc" {
   subnet_id      = aws_subnet.public_subnet.id
   route_table_id = aws_route_table.public_rt.id
+  tags = {
+     "Name" = "CodeBuid-torsten-testhost"
+     }
 }
 
 # Create a Security Group to allow SSH and ICMP (ping)
 resource "aws_security_group" "allow_ssh" {
   vpc_id = aws_vpc.main_vpc.id
+  tags = {
+     "Name" = "CodeBuid-torsten-testhost"
+     }
 
   ingress {
     from_port   = 22
