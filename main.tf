@@ -92,25 +92,25 @@ resource "aws_security_group" "allow_ssh" {
   }
 }
 
-# # Create an EC2 Instance
-# resource "aws_instance" "linux_ec2" {
-#   ami           = "ami-0ebfd941bbafe70c6" # Amazon Linux 2 AMI (Check your region for AMI ID)
-#   instance_type = "t2.micro"
-#   subnet_id     = aws_subnet.public_subnet.id
-#   # security_groups = [aws_security_group.allow_ssh.name]
+# Create an EC2 Instance
+resource "aws_instance" "linux_ec2" {
+  ami           = "ami-08d8ac128e0a1b91c" # Amazon Linux 2 AMI (Check your region for AMI ID)
+  instance_type = "t2.micro"
+  subnet_id     = aws_subnet.public_subnet.id
+  # security_groups = [aws_security_group.allow_ssh.name]
 
-#   tags = {
-#     Name = "CodeBuild-Torsten"
-#   }
+  tags = {
+    Name = "CodeBuild-Torsten"
+  }
 
-#   key_name = data.aws_key_pair.vmseries.key_name  # Replace with your SSH key pair name
-# }
-
-
+  key_name = data.aws_key_pair.vmseries.key_name  # Replace with your SSH key pair name
+}
 
 
 
-# # Output the Public IP of the instance
-# output "ec2_public_ip" {
-#   value = aws_instance.linux_ec2.public_ip
-# }
+
+
+# Output the Public IP of the instance
+output "ec2_public_ip" {
+  value = aws_instance.linux_ec2.public_ip
+}
