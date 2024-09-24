@@ -95,7 +95,7 @@ resource "aws_security_group" "allow_ssh" {
 # Create an EC2 Instance
 resource "aws_instance" "linux_ec2" {
   ami           = "ami-08d8ac128e0a1b91c" # Amazon Linux 2 AMI (Check your region for AMI ID)
-  instance_type = "c5.large"
+  instance_type = "t3.micro"
   subnet_id     = aws_subnet.public_subnet.id
   # security_groups = [aws_security_group.allow_ssh.name]
 
