@@ -32,6 +32,12 @@ resource "random_id" "bucket_suffix" {
   byte_length = 4
 }
 #######Bedrock TEST AGENT###########
+data "aws_caller_identity" "current" {}
+
+data "aws_partition" "current" {}
+
+data "aws_region" "current" {}
+
 data "aws_iam_policy_document" "example_agent_trust" {
   statement {
     actions = ["sts:AssumeRole"]
