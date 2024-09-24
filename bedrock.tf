@@ -79,7 +79,7 @@ resource "aws_iam_role_policy_attachment" "attach_policy" {
 resource "awscc_bedrock_agent" "example" {
   agent_name              = "example-agent"
   description             = "Example agent configuration"
-  agent_resource_role_arn = aws_iam_role.service_role.id
+  agent_resource_role_arn = aws_iam_role.cloudformation_role.id
   foundation_model        = "amazon.titan-text-gq-premier"
   instruction             = "You are an office assistant in an insurance agency. You are friendly and polite. You help with managing insurance claims and coordinating pending paperwork."
 
