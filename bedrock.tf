@@ -74,20 +74,20 @@ resource "awscc_bedrock_agent" "example" {
   idle_session_ttl_in_seconds = 600
   auto_prepare                = true
 
-  action_groups = [{
-    action_group_name = "example-action-group"
-    description       = "Example action group"
-    api_schema = {
-      s3 = {
-        s3_bucket_name = var.bucket_name
-        s3_object_key  = var.bucket_object_key
-      }
+  # action_groups = [{
+  #   action_group_name = "example-action-group"
+  #   description       = "Example action group"
+  #   api_schema = {
+  #     s3 = {
+  #       s3_bucket_name = var.bucket_name
+  #       s3_object_key  = var.bucket_object_key
+  #     }
     # }
     # action_group_executor = {
     #   lambda = var.lambda_arn
     # }
 
-  }]
+  # }]
 
   tags = {
     "Modified By" = "AWSCC"
