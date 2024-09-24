@@ -41,12 +41,10 @@ resource "aws_iam_role" "service_role" {
     Version = "2012-10-17"
     Statement = [
       {
-        Effect = "Allow"
-        Principal = {
-          Service = "lambda.amazonaws.com"  # Change this to the service you want to use (e.g., ec2.amazonaws.com)
+            "Effect": "Allow",
+            "Action": "cloudformation:CreateResource",
+            "Resource": "*"
         }
-        Action = "sts:AssumeRole"
-      }
     ]
   })
 
@@ -61,7 +59,7 @@ resource "aws_iam_role" "service_role" {
 resource "awscc_bedrock_agent" "example" {
   agent_name              = "example-agent"
   description             = "Example agent configuration"
-  agent_resource_role_arn = aws_iam_role.service_role.id
+  agent_resource_role_arn = aws_iam_role.service_role.name.id
   foundation_model        = "amazon.titan-text-gq-premier"
   instruction             = "You are an office assistant in an insurance agency. You are friendly and polite. You help with managing insurance claims and coordinating pending paperwork."
 
