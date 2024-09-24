@@ -34,24 +34,44 @@ resource "random_id" "bucket_suffix" {
 
 ########### Bedrock ################
 
-resource "aws_iam_role" "service_role" {
-  name = "test2"
+resource "aws_iam_role" "cloudformation_role" {
+  name = "cloudformation-create-resource-role"
 
   assume_role_policy = jsonencode({
-    Version = "2012-10-17"
+    Version = "2012-10-17",
     Statement = [
       {
-            "Effect": "Allow",
-            "Action": "cloudformation:CreateResource",
-            "Resource": "*"
+        Action = "sts:AssumeRole",
+        Effect = "Allow",
+        Principal = {
+          Service = "codebuild.amazonaws.com"  # Replace with the appropriate service that will assume this role
         }
+      }
     ]
   })
+}
 
-  tags = {
-    Name        = "my-service-role"
-    Environment = "production"
-  }
+resource "aws_iam_policy" "cloudformation_policy" {
+  name = "CloudFormationCreateResourcePolicy"
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect = "Allow",
+        Action = [
+          "cloudformation:CreateResource",
+          "cloudformation:*"
+        ],
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "attach_policy" {
+  role       = aws_iam_role.cloudformation_role.name
+  policy_arn = aws_iam_policy.cloudformation_policy.arn
 }
 
 
