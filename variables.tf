@@ -5,6 +5,10 @@ variable "region" {
   default     = "us-east-1"
 }
 
+variable "dynamodb_table_name" {
+  description = "Name of the DynamoDB table"
+  default     = "workshop_flight_data"
+}
 # variable "s3_bucket" {
 #   description = "AWS region used to deploy whole infrastructure"
 #   type        = string
