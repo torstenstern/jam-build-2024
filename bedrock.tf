@@ -35,7 +35,7 @@ resource "random_id" "bucket_suffix" {
 ########### Bedrock ################
 
 resource "aws_iam_role" "service_role" {
-  name = "my_service_role"
+  name = "test2"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
