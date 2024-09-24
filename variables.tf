@@ -2,7 +2,7 @@
 variable "region" {
   description = "AWS region used to deploy whole infrastructure"
   type        = string
-  default     = "us-east-1"
+  default     = "us-west-2"
 }
 
 variable "dynamodb_table_name" {
