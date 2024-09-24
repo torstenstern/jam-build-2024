@@ -27,10 +27,10 @@ resource "aws_s3_bucket_object" "input_data" {
   }
 }
 
-# # Random ID generator to ensure bucket name uniqueness
-# resource "random_id" "bucket_suffix" {
-#   byte_length = 4
-# }
+# Random ID generator to ensure bucket name uniqueness
+resource "random_id" "bucket_suffix" {
+  byte_length = 4
+}
 
 # # IAM Role for Bedrock Agent with necessary permissions
 # resource "aws_iam_role" "bedrock_agent_role" {
