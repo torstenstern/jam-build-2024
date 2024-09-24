@@ -6,6 +6,10 @@ terraform {
       source  = "hashicorp/aws"
       version = "5.68.0"
     }
+    awscc = {
+      source = "hashicorp/awscc"
+      version = "1.15.0"
+    }
     null = {
       source  = "hashicorp/null"
       version = "3.2.2"
@@ -17,5 +21,9 @@ terraform {
 }
 
 provider "aws" {
+  region  = var.region
+}
+
+provider "awscc" {
   region  = var.region
 }
