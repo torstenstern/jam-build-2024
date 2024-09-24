@@ -64,11 +64,11 @@ resource "awscc_bedrock_agent" "example" {
   agent_resource_role_arn = aws_iam_role.service_role.id
   foundation_model        = "anthropic.claude-v2:1"
   instruction             = "You are an office assistant in an insurance agency. You are friendly and polite. You help with managing insurance claims and coordinating pending paperwork."
-  knowledge_bases = [{
-    description          = "example knowledge base"
-    # knowledge_base_id    = var.knowledge_base_id
-    knowledge_base_state = "ENABLED"
-  }]
+  # knowledge_bases = [{
+  #   description          = "example knowledge base"
+  #   knowledge_base_id    = var.knowledge_base_id
+  #   knowledge_base_state = "ENABLED"
+  # }]
 
   # customer_encryption_key_arn = var.kms_key_arn
   idle_session_ttl_in_seconds = 600
