@@ -23,18 +23,6 @@ resource "aws_s3_bucket_object" "input_data" {
   source = "${path.module}/input_data/${each.value}"
   acl    = "private"
 
-  # Use content_type to set the correct MIME type
-  content_type = lookup({
-    "txt"  = "text/plain"
-    "yaml" = "application/x-yaml"
-    "json" = "application/json"
-    "py"   = "text/x-python"
-    # Add more file types as needed
-  }, regex("\\.[^.]+$", each.value)[0] != null ? lower(regex("\\.[^.]+$", each.value)[0]) : "", "application/octet-stream")
-
-  # Use etag for change detection
-  etag = filemd5("${path.module}/input_data/${each.value}")
-
   tags = {
     "Environment" = "Production"
     "Project"     = "AI-Project"
