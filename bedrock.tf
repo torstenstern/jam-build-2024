@@ -131,10 +131,15 @@ resource "aws_bedrockagent_agent_action_group" "example" {
    action_group_executor {
     lambda = "arn:aws:lambda:us-east-1:913410190579:function:example-function"
     }
-  
-  api_schema {
-    payload = file("input_data/api.yaml")
-  }
+    api_schema {
+      s3 {
+        s3_bucket_name = aws.s3_bucket_name.bedrock_input_output_bucket.name
+        s3_object_key  = "input/api.yaml"
+      }
+    }
+  # api_schema {
+  #   payload = file("input_data/api.yaml")
+  # }
 }
 
 # api_schema {
