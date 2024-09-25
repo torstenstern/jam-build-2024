@@ -129,7 +129,7 @@ resource "aws_bedrockagent_agent_action_group" "example" {
   skip_resource_in_use_check = true
   
    action_group_executor {
-    lambda = aws_lambda_function.my_lambda.id
+    lambda = aws_lambda_function.my_lambda.arn
     }
     # api_schema {
     #   s3 {
