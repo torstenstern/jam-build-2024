@@ -17,8 +17,8 @@ resource "aws_s3_bucket" "bedrock_input_output_bucket" {
 # Upload input_data file to the S3 bucket
 resource "aws_s3_bucket_object" "input_data" {
   bucket = aws_s3_bucket.bedrock_input_output_bucket.bucket
-  key    = "input/dummy_lambda.py" # Path to the file within the bucket prompt.txt - before
-  source = "${path.module}/input_data/dummy_lambda.py" # Local file to upload
+  key    = "input/*" # Path to the file within the bucket prompt.txt - before
+  source = "${path.module}/input_data/*" # Local file to upload
   acl    = "private"
 
   tags = {
