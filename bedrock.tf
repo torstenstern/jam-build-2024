@@ -109,47 +109,6 @@ resource "aws_iam_role_policy" "bedrock_service_role_policy" {
   })
 }
 
-# resource "aws_iam_role" "cloudformation_role" {
-#   name = "cloudformation-create-resource-role"
-
-#   assume_role_policy = jsonencode({
-#     Version = "2012-10-17",
-#     Statement = [
-#       {
-#         Action = "sts:AssumeRole",
-#         Effect = "Allow",
-#         Principal = {
-#           Service = "codebuild.amazonaws.com"  # Replace with the appropriate service that will assume this role
-#         }
-#       }
-#     ]
-#   })
-# }
-
-# resource "aws_iam_policy" "cloudformation_policy" {
-#   name = "CloudFormationCreateResourcePolicy"
-
-#   policy = jsonencode({
-#     Version = "2012-10-17",
-#     Statement = [
-#       {
-#         Effect = "Allow",
-#         Action = [
-#           "cloudformation:CreateResource",
-#           "cloudformation:*"
-#         ],
-#         Resource = "*"
-#       }
-#     ]
-#   })
-# }
-
-
-# resource "aws_iam_role_policy_attachment" "attach_policy" {
-#   role       = aws_iam_role.cloudformation_role.name
-#   policy_arn = aws_iam_policy.cloudformation_policy.arn
-# }
-
 # Bedrock Agent
 resource "aws_bedrockagent_agent" "example" {
   agent_name                  = "my-agent-name"
