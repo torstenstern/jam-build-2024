@@ -125,7 +125,7 @@ resource "aws_bedrockagent_agent_action_group" "example" {
   agent_version              = "DRAFT"
   skip_resource_in_use_check = true
   action_group_executor {
-    lambda = "arn:aws:lambda:us-west-2:123456789012:function:example-function"
+    lambda = "arn:aws:lambda:us-east-1:913410190579:function:example-function"
   }
   api_schema {
     payload = data.aws_s3_object.schema_file.body
