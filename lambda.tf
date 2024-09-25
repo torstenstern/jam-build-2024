@@ -28,7 +28,7 @@ resource "aws_lambda_function" "my_lambda" {
   handler       = "your_script.lambda_handler"  # Adjust based on your handler function
   runtime       = "python3.8"  # Replace with your desired runtime
 
-  filename = "${path.module}/dummy_lambda.zipp"
+  filename = "${path.module}/dummy_lambda.zip"
 
   source_code_hash = filebase64sha256("${path.module}/dummy_lambda.zip")
 
