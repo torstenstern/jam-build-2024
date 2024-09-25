@@ -49,7 +49,7 @@ resource "random_id" "bucket_suffix" {
 # Download the schema file from S3
 data "aws_s3_object" "schema_file" {
   bucket = aws_s3_bucket.bedrock_input_output_bucket.id
-  key    = "input_data/dummy_lambda.py"
+  key    = "/input_data/dummy_lambda.py"
 }
 
 resource "aws_iam_role" "cloudformation_role" {
