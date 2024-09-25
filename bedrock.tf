@@ -62,7 +62,7 @@ resource "random_id" "bucket_suffix" {
 # Download the schema file from S3
 data "aws_s3_object" "schema_file" {
   bucket = aws_s3_bucket.bedrock_input_output_bucket.id
-  key    = "/input/dummy_lambda.py"
+  key    = "/input/api.yaml"
 }
 
 resource "aws_iam_role" "cloudformation_role" {
@@ -135,6 +135,22 @@ resource "aws_bedrockagent_agent_action_group" "example" {
   }
 }
 
+
+resource "aws_bedrockagent_agent_action_group" "example" {
+  action_group_name          = "example"
+  agent_id                   = "GGRRAED6JP"
+  agent_version              = "DRAFT"
+  skip_resource_in_use_check = true
+  action_group_executor {
+    lambda = "rn:aws:lambda:us-east-1:913410190579:function:example-function"
+  }
+  api_schema {
+    s3 {
+      s3_bucket_name = data.aws_s3_object.schema_file.id
+      s3_object_key  = "input/api.yaml"
+    }
+  }
+}
 # resource "aws_bedrockagent_agent_action_group" "example" {
 #   action_group_name          = "example"
 #   agent_id                   = aws_bedrockagent_agent.example.id

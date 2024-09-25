@@ -1,0 +1,183 @@
+openapi: 3.0.0
+info:
+  title: Flight Information API
+  version: 1.0.0
+paths:
+  /get-flight-details:
+    post:
+      summary: Get Flight Details
+      description: Retrieve flight details by flight number and departure date
+      operationId: get-flight-details
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GetFlightDetailsRequest"
+      responses:
+        "200":
+          description: Flight Details Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FlightDetailsResponse"
+        "404":
+          description: Flight Details Not Found Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundResponse"
+        "500":
+          description: General Error Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericErrorResponse"
+  /search-flights:
+    post:
+      summary: Search Flights
+      description: Search for flights based on arrival and departure cities
+      operationId: search-flights
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SearchFlightsRequest"
+      responses:
+        "200":
+          description: Search Flights Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SearchFlightsResponse"
+  /book-flight:
+    post:
+      summary: Book a flight
+      description: Take payment information, book the customer's requested flight using flight number, departure time if available, and return booking confirmation to customer.
+      operationId: book-flights
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BookFlightRequest"
+      responses:
+        "200":
+          description: Ticket Price Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BookFlightResponse"      
+components:
+  schemas:
+    GetFlightDetailsRequest:
+      type: object
+      required:
+        - flight_number
+        - departure_date
+      properties:
+        flight_number:
+          type: string
+        departure_date:
+          type: string
+    FlightDetailsResponse:
+      type: object
+      properties:
+        body:
+          type: object
+          properties:
+            flight_number:
+              type: string
+            departure_date:
+              type: string
+            arrival_city:
+              type: string
+            departure_city:
+              type: string
+            departure_time:
+              type: string
+            flight_details:
+              type: string
+    SearchFlightsRequest:
+      type: object
+      required:
+        - arrival_city
+        - departure_city
+      properties:
+        arrival_city:
+          type: string
+        departure_city:
+          type: string
+    SearchFlightsResponse:
+      type: object
+      properties:
+        body:
+          type: array
+          items:
+            type: object
+            properties:
+              flight_number:
+                type: string
+              departure_date:
+                type: string
+              departure_time:
+                type: string
+              ticket_price:
+                type: string
+    BookFlightRequest:
+      type: object
+      required:
+        - flight_number
+        - departure_date
+        - first_name
+        - last_name
+        - dob
+        - credit_card_num
+        - cc_expiration_date
+        - cvc
+      properties:
+        flight_number:
+          type: string
+        departure_date:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+        dob:
+          type: string
+        credit_card_num:
+          type: string
+        cc_expiration_date:
+          type: string
+        cvc:
+          type: int
+    BookFlightResponse:
+      type: object
+      properties:
+        body:
+          type: object
+          properties:
+            confirmation_number:
+              type: string
+    GenericErrorResponse:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+        body:
+          type: object
+          properties:
+            message:
+              type: string
+    NotFoundResponse:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+        body:
+          type: object
+          properties:
+            message:
+              type: string
