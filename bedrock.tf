@@ -17,19 +17,7 @@ resource "aws_s3_bucket" "bedrock_input_output_bucket" {
 # Upload input_data file to the S3 bucket
 resource "aws_s3_bucket_object" "input_data" {
   bucket = aws_s3_bucket.bedrock_input_output_bucket.bucket
-  key    = "input/prompt.txt" # Path to the file within the bucket
-  source = "${path.module}/input_data/prompt.txt" # Local file to upload
-  acl    = "private"
-
-  tags = {
-    "Environment" = "Production"
-    "Project"     = "AI-Project"
-  }
-}
-
-resource "aws_s3_bucket_object" "input_data2" {
-  bucket = aws_s3_bucket.bedrock_input_output_bucket.bucket
-  key    = "input/dummy_lambda.py" # Path to the file within the bucket
+  key    = "input/dummy_lambda.py" # Path to the file within the bucket prompt.txt - before
   source = "${path.module}/input_data/dummy_lambda.py" # Local file to upload
   acl    = "private"
 
@@ -38,6 +26,18 @@ resource "aws_s3_bucket_object" "input_data2" {
     "Project"     = "AI-Project"
   }
 }
+
+# resource "aws_s3_bucket_object" "input_data2" {
+#   bucket = aws_s3_bucket.bedrock_input_output_bucket.bucket
+#   key    = "input/dummy_lambda.py" # Path to the file within the bucket
+#   source = "${path.module}/input_data/dummy_lambda.py" # Local file to upload
+#   acl    = "private"
+
+#   tags = {
+#     "Environment" = "Production"
+#     "Project"     = "AI-Project"
+#   }
+# }
 
 # Random ID generator to ensure bucket name uniqueness
 resource "random_id" "bucket_suffix" {
@@ -49,7 +49,7 @@ resource "random_id" "bucket_suffix" {
 # Download the schema file from S3
 data "aws_s3_object" "schema_file" {
   bucket = aws_s3_bucket.bedrock_input_output_bucket.id
-  key    = "/input_data/dummy_lambda.py"
+  key    = "input_data/dummy_lambda.py"
 }
 
 resource "aws_iam_role" "cloudformation_role" {
