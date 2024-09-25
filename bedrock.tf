@@ -24,13 +24,13 @@ resource "aws_s3_bucket_object" "input_data" {
   acl    = "private"
 
   # Use content_type to set the correct MIME type
-  content_type = lookup({
+  content_type = lookup{
     "txt"  = "text/plain"
     "yaml" = "application/x-yaml"
     "json" = "application/json"
     "py"   = "text/x-python"
     # Add more file types as needed
-  }, regex("\\.[^.]+$", each.value)[0] != null ? lower(regex("\\.[^.]+$", each.value)[0]) : "", "application/octet-stream")
+  } 
 
   tags = {
     "Environment" = "Production"
