@@ -1,3 +1,7 @@
+data "aws_caller_identity" "current" {}
+
+data "aws_region" "current" {}
+
 
 resource "aws_iam_role" "lambda_role" {
   name = "lambda_awsjam_test"
@@ -43,6 +47,16 @@ resource "aws_iam_role_policy" "lambda_policy" {
   })
 }
 
+resource "aws_lambda_permission" "allow_bedrock" {
+  statement_id  = "AllowBedrockInvoke"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.my_lambda.function_name
+  principal     = "bedrock.amazonaws.com"
+  
+  source_account = data.aws_caller_identity.current.account_id
+  source_arn     = aws_bedrockagent_agent.example.agent_arn
+}
+
 
 resource "aws_iam_role_policy_attachment" "lambda_policy_attachment" {
   role       = aws_iam_role.lambda_role.name
@@ -58,7 +72,7 @@ resource "aws_iam_role_policy_attachment" "dynamodb_read_only_access" {
 resource "aws_lambda_function" "my_lambda" {
   function_name = "MyLambdaFunction"  # Replace with your desired Lambda function name
   role          = aws_iam_role.lambda_role.arn
-  handler       = "your_script.lambda_handler"  # Adjust based on your handler function
+  handler       = "dummy_lambda.lambda_handler"  # Adjust based on your handler function
   runtime       = "python3.8"  # Replace with your desired runtime
 
   filename = "${path.module}/input_data/dummy_lambda.zip"

@@ -87,6 +87,23 @@ resource "aws_iam_role_policy" "bedrock_service_role_policy" {
         Resource = [
           "arn:aws:bedrock:${var.region}::foundation-model/${var.foundationmodel}"
         ]
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "lambda:InvokeFunction"
+        ]
+        Resource = "*"
+      },
+      {
+        Sid    = "AmazonBedrockAgentCloudWatchPolicyProd"
+        Effect = "Allow"
+        Action = [
+          "logs:CreateLogGroup",
+          "logs:CreateLogStream",
+          "logs:PutLogEvents"
+        ]
+        Resource = "*"
       }
     ]
   })
