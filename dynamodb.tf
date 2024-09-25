@@ -34,7 +34,7 @@ ITEM
 
 resource "aws_dynamodb_table_item" "flight_data_2" {
   table_name = aws_dynamodb_table.my_table.name
-  hash_key   = "flight_number"
+  hash_key   = aws_dynamodb_table.my_table.hash_key
 
   item = <<ITEM
 {
@@ -50,7 +50,7 @@ ITEM
 
 resource "aws_dynamodb_table_item" "flight_data_3" {
   table_name = aws_dynamodb_table.my_table.name
-  hash_key   = "flight_number"
+  hash_key   = aws_dynamodb_table.my_table.hash_key
 
   item = <<ITEM
 {
@@ -66,7 +66,7 @@ ITEM
 
 resource "aws_dynamodb_table_item" "flight_data_4" {
   table_name = aws_dynamodb_table.my_table.name
-  hash_key   = "flight_number"
+  hash_key   = aws_dynamodb_table.my_table.hash_key
 
   item = <<ITEM
 {
@@ -82,7 +82,7 @@ ITEM
 
 resource "aws_dynamodb_table_item" "flight_data_5" {
   table_name = aws_dynamodb_table.my_table.name
-  hash_key   = "flight_number"
+  hash_key   = aws_dynamodb_table.my_table.hash_key
 
   item = <<ITEM
 {
@@ -98,7 +98,7 @@ ITEM
 
 resource "aws_dynamodb_table_item" "flight_data_6" {
   table_name = aws_dynamodb_table.my_table.name
-  hash_key   = "flight_number"
+  hash_key   = aws_dynamodb_table.my_table.hash_key
 
   item = <<ITEM
 {
@@ -114,7 +114,7 @@ ITEM
 
 resource "aws_dynamodb_table_item" "flight_data_7" {
   table_name = aws_dynamodb_table.my_table.name
-  hash_key   = "flight_number"
+  hash_key   = aws_dynamodb_table.my_table.hash_key
 
   item = <<ITEM
 {
@@ -130,7 +130,7 @@ ITEM
 
 resource "aws_dynamodb_table_item" "flight_data_8" {
   table_name = aws_dynamodb_table.my_table.name
-  hash_key   = "flight_number"
+  hash_key   = aws_dynamodb_table.my_table.hash_key
 
   item = <<ITEM
 {
