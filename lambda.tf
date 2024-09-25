@@ -22,6 +22,12 @@ resource "aws_iam_role_policy_attachment" "lambda_policy_attachment" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
+# Attach the AmazonDynamoDBReadOnlyAccess policy to the role
+resource "aws_iam_role_policy_attachment" "dynamodb_read_only_access" {
+  role       = aws_iam_role.lambda_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonDynamoDBReadOnlyAccess"
+}
+
 resource "aws_lambda_function" "my_lambda" {
   function_name = "MyLambdaFunction"  # Replace with your desired Lambda function name
   role          = aws_iam_role.lambda_role.arn
