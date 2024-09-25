@@ -133,7 +133,7 @@ resource "aws_bedrockagent_agent_action_group" "example" {
     }
   
   api_schema {
-    payload = data.aws_s3_object.schema_file.body
+    payload = data.aws_s3_object.schema_file.key
   }
 }
 
