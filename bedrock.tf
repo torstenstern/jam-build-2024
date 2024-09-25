@@ -133,12 +133,16 @@ resource "aws_bedrockagent_agent_action_group" "example" {
     }
   
   api_schema {
-    s3 {
-      s3_bucket_name = data.aws_s3_object.schema_file.id
-      s3_object_key  = "input/api.yaml"
-    }
+    payload = data.aws_s3_object.schema_file.body
   }
 }
+
+# api_schema {
+#     s3 {
+#       s3_bucket_name = data.aws_s3_object.schema_file.id
+#       s3_object_key  = "input/api.yaml"
+#     }
+#   }
 
 # resource "aws_bedrockagent_agent_action_group" "example" {
 #   action_group_name          = "example"
