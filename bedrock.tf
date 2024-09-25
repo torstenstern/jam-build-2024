@@ -119,17 +119,33 @@ resource "aws_bedrockagent_agent" "example" {
   } 
 }
 
+# Bedrock Agent Action Group
 resource "aws_bedrockagent_agent_action_group" "example" {
   action_group_name          = "example"
   agent_id                   = aws_bedrockagent_agent.example.id
   agent_version              = "DRAFT"
   skip_resource_in_use_check = true
+  
   action_group_executor {
-    lambda = "arn:aws:lambda:us-east-1:913410190579:function:example-function"
+    custom_control = "RETURN_CONTROL"
   }
+  
   api_schema {
     payload = data.aws_s3_object.schema_file.body
   }
 }
+
+# resource "aws_bedrockagent_agent_action_group" "example" {
+#   action_group_name          = "example"
+#   agent_id                   = aws_bedrockagent_agent.example.id
+#   agent_version              = "DRAFT"
+#   skip_resource_in_use_check = true
+#   action_group_executor {
+#     lambda = "arn:aws:lambda:us-east-1:913410190579:function:example-function"
+#   }
+#   api_schema {
+#     payload = data.aws_s3_object.schema_file.body
+#   }
+# }
 
 ################################################################################
