@@ -1,6 +1,6 @@
 module "sagemaker-huggingface" {
   source               = "philschmid/sagemaker-huggingface/aws"
-  version              = "0.5.0"
+  version              = "0.9.0"
   name_prefix          = "distilbert"
   pytorch_version      = "1.9.1"
   transformers_version = "4.12.3"
