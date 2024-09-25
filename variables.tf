@@ -9,6 +9,11 @@ variable "dynamodb_table_name" {
   description = "Name of the DynamoDB table"
   default     = "workshop_flight_data"
 }
+
+variable "foundationmodel" {
+  description = "Define Foundation Model"
+  default = "amazon.titan-text-premier-v1:0"
+}
 # variable "s3_bucket" {
 #   description = "AWS region used to deploy whole infrastructure"
 #   type        = string
