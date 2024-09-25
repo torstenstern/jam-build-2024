@@ -133,7 +133,7 @@ resource "aws_bedrockagent_agent_action_group" "example" {
     }
     api_schema {
       s3 {
-        s3_bucket_name = aws_s3_bucket.bedrock_input_output_bucket.id
+        s3_bucket_name = aws_s3_bucket.bedrock_input_output_bucket.bucket
         s3_object_key  = "input/api.yaml"
       }
     }
