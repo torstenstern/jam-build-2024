@@ -81,7 +81,7 @@ resource "aws_bedrockagent_agent" "example" {
   agent_resource_role_arn     = aws_iam_role.cloudformation_role.arn
   idle_session_ttl_in_seconds = 500
   foundation_model            = "anthropic.claude-v2"
-  instruction                 = "You are a helpful assistant."
+  instruction                 = "You are a customer service agent.  Your job is to help the customer do the following:1. Find flights that match their search criteria and ask them if they'd like to book a flight.2. Book and pay for the flight reservation using a credit card.3. Be helpful and answer questios they might have."
   tags = {
     "Environment" = "Production"
     "Project"     = "AI-Project"
