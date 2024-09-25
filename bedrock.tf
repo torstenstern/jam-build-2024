@@ -20,23 +20,37 @@ resource "aws_s3_bucket_object" "input_data" {
 
   bucket = aws_s3_bucket.bedrock_input_output_bucket.bucket
   key    = "input/${each.value}"
-  source = "${path.module}/input_data/${each.value}" # Local file to upload
+  source = "${path.module}/input_data/${each.value}"
   acl    = "private"
 
   # Use content_type to set the correct MIME type
-  content_type = lookup{
+  content_type = lookup({
     "txt"  = "text/plain"
     "yaml" = "application/x-yaml"
     "json" = "application/json"
     "py"   = "text/x-python"
     # Add more file types as needed
-  } 
+  }, regex("\\.[^.]+$", each.value)[0] != null ? lower(regex("\\.[^.]+$", each.value)[0]) : "", "application/octet-stream")
+
+  # Use etag for change detection
+  etag = filemd5("${path.module}/input_data/${each.value}")
 
   tags = {
     "Environment" = "Production"
     "Project"     = "AI-Project"
   }
 }
+# resource "aws_s3_bucket_object" "input_data" {
+#   bucket = aws_s3_bucket.bedrock_input_output_bucket.bucket
+#   key    = "input/dummy_lambda.py" # Path to the file within the bucket prompt.txt - before
+#   source = "${path.module}/input_data/dummy_lambda.py" # Local file to upload
+#   acl    = "private"
+
+#   tags = {
+#     "Environment" = "Production"
+#     "Project"     = "AI-Project"
+#   }
+# }
 
 # resource "aws_s3_bucket_object" "input_data2" {
 #   bucket = aws_s3_bucket.bedrock_input_output_bucket.bucket
