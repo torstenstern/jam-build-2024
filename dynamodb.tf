@@ -5,7 +5,7 @@ resource "aws_dynamodb_table" "my_table" {
   hash_key       = "flight_number"  # Primary key (adjust according to your schema)
   
   attribute {
-    name = "id"
+    name = "flight_number"
     type = "S"
   }
 
