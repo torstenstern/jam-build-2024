@@ -59,11 +59,13 @@ resource "random_id" "bucket_suffix" {
 
 ########### Bedrock ################
 
-# # Download the schema file from S3
-# data "aws_s3_object" "schema_file" {
-#   bucket = aws_s3_bucket.bedrock_input_output_bucket.id
-#   key    = "input/api.yaml"
-# }
+# Download the schema file from S3
+data "aws_s3_object" "schema_file" {
+  bucket = aws_s3_bucket.bedrock_input_output_bucket.id
+  key    = "input/api.yaml"
+
+  depends_on = [ aws_s3_bucket_object.input_data ]
+}
 
 resource "aws_iam_role" "cloudformation_role" {
   name = "cloudformation-create-resource-role"
