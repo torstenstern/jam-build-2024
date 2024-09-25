@@ -131,26 +131,13 @@ resource "aws_bedrockagent_agent_action_group" "example" {
   }
   
   api_schema {
-    payload = data.aws_s3_object.schema_file.body
-  }
-}
-
-
-resource "aws_bedrockagent_agent_action_group" "example" {
-  action_group_name          = "example"
-  agent_id                   = "GGRRAED6JP"
-  agent_version              = "DRAFT"
-  skip_resource_in_use_check = true
-  action_group_executor {
-    lambda = "rn:aws:lambda:us-east-1:913410190579:function:example-function"
-  }
-  api_schema {
     s3 {
       s3_bucket_name = data.aws_s3_object.schema_file.id
       s3_object_key  = "input/api.yaml"
     }
   }
 }
+
 # resource "aws_bedrockagent_agent_action_group" "example" {
 #   action_group_name          = "example"
 #   agent_id                   = aws_bedrockagent_agent.example.id
