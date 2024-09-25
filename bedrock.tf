@@ -16,10 +16,21 @@ resource "aws_s3_bucket" "bedrock_input_output_bucket" {
 
 # Upload input_data file to the S3 bucket
 resource "aws_s3_bucket_object" "input_data" {
+  for_each = fileset("${path.module}/input_data", "*")
+
   bucket = aws_s3_bucket.bedrock_input_output_bucket.bucket
-  key    = "input/*" # Path to the file within the bucket prompt.txt - before
-  source = "${path.module}/input_data/*" # Local file to upload
+  key    = "input/${each.value}"
+  source = "${path.module}/input_data/${each.value}" # Local file to upload
   acl    = "private"
+
+  # Use content_type to set the correct MIME type
+  content_type = lookup({
+    "txt"  = "text/plain"
+    "yaml" = "application/x-yaml"
+    "json" = "application/json"
+    "py"   = "text/x-python"
+    # Add more file types as needed
+  }, regex("\\.[^.]+$", each.value)[0] != null ? lower(regex("\\.[^.]+$", each.value)[0]) : "", "application/octet-stream")
 
   tags = {
     "Environment" = "Production"
