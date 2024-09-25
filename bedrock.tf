@@ -129,8 +129,8 @@ resource "aws_iam_role_policy" "bedrock_service_role_policy" {
 
 
 resource "aws_iam_role_policy_attachment" "attach_policy" {
-  role       = aws_iam_role.bedrock_service_role.name
-  policy_arn = aws_iam_policy.bedrock_service_role_policy.arn
+  role       = aws_iam_role.cloudformation_role.name
+  policy_arn = aws_iam_policy.cloudformation_policy.arn
 }
 
 # Bedrock Agent
