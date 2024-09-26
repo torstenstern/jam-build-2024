@@ -93,9 +93,24 @@ resource "aws_security_group" "allow_ssh" {
 }
 
 # Create an EC2 Instance
+data "aws_ami" "amazon_linux_2" {
+  most_recent = true
+  owners      = ["amazon"]
+
+  filter {
+    name   = "name"
+    values = ["amzn2-ami-hvm-*-x86_64-gp2"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+}
+
 resource "aws_instance" "linux_ec2" {
-  ami           = "ami-0ebfd941bbafe70c6" # Amazon Linux 2 AMI (Check your region for AMI ID) AMI USWest-2 ami-08d8ac128e0a1b91c
-  instance_type = "t2.micro"
+  ami           = data.aws_ami.amazon_linux_2.id
+  instance_type = "t3.micro"
   subnet_id     = aws_subnet.public_subnet.id
   # security_groups = [aws_security_group.allow_ssh.name]
 
@@ -103,7 +118,7 @@ resource "aws_instance" "linux_ec2" {
     Name = "CodeBuild-Torsten"
   }
 
-  key_name = data.aws_key_pair.vmseries.key_name  # Replace with your SSH key pair name
+  key_name = data.aws_key_pair.vmseries.key_name
 }
 
 
