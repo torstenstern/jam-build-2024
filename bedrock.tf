@@ -153,15 +153,15 @@ resource "aws_bedrockagent_agent" "external" {
   } 
 }
 
-# Bedrock Agent Action Group
+# Bedrock Agent 2 Action Group
 resource "aws_bedrockagent_agent_action_group" "example" {
   action_group_name          = "external-ag"
-  agent_id                   = aws_bedrockagent_agent.etch_data_function.id
+  agent_id                   = aws_bedrockagent_agent.external.id
   agent_version              = "DRAFT"
   skip_resource_in_use_check = true
   
    action_group_executor {
-    lambda = aws_lambda_function.my_lambda.arn
+    lambda = aws_lambda_function.fetch_data_function.arn
     }
 
     api_schema {
