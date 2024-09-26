@@ -109,6 +109,7 @@ resource "aws_iam_role_policy" "bedrock_service_role_policy" {
   })
 }
 
+# Agent 1 Internal Call DynamoDB
 # Bedrock Agent
 resource "aws_bedrockagent_agent" "example" {
   agent_name                  = "my-agent-name"
@@ -126,6 +127,36 @@ resource "aws_bedrockagent_agent" "example" {
 resource "aws_bedrockagent_agent_action_group" "example" {
   action_group_name          = "example"
   agent_id                   = aws_bedrockagent_agent.example.id
+  agent_version              = "DRAFT"
+  skip_resource_in_use_check = true
+  
+   action_group_executor {
+    lambda = aws_lambda_function.my_lambda.arn
+    }
+
+    api_schema {
+      payload = file("input_data/api.yaml")
+    }
+}
+
+
+# Agent 2 External Call with API GW
+resource "aws_bedrockagent_agent" "external" {
+  agent_name                  = "my-agent-name"
+  agent_resource_role_arn     = aws_iam_role.bedrock_service_role.arn
+  idle_session_ttl_in_seconds = 500
+  foundation_model            = var.foundationmodel
+  instruction                 = file("${path.module}/input_data/prompt.txt")
+  tags = {
+    "Environment" = "Production"
+    "Project"     = "AI-Project"
+  } 
+}
+
+# Bedrock Agent Action Group
+resource "aws_bedrockagent_agent_action_group" "example" {
+  action_group_name          = "external-ag"
+  agent_id                   = aws_bedrockagent_agent.etch_data_function.id
   agent_version              = "DRAFT"
   skip_resource_in_use_check = true
   
