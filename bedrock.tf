@@ -154,7 +154,7 @@ resource "aws_bedrockagent_agent" "external" {
 }
 
 # Bedrock Agent 2 Action Group
-resource "aws_bedrockagent_agent_action_group" "example" {
+resource "aws_bedrockagent_agent_action_group" "external" {
   action_group_name          = "external-ag"
   agent_id                   = aws_bedrockagent_agent.external.id
   agent_version              = "DRAFT"
