@@ -49,7 +49,7 @@ data "aws_s3_object" "schema_file" {
 
 # Create the IAM role
 resource "aws_iam_role" "bedrock_service_role" {
-  name = "bedrock-agent-service-role"
+  name = "bedrock-agent-service-role-${random_string.global_suffix.result}"
 
   # Define the trust relationship (assume role policy)
   assume_role_policy = jsonencode({
@@ -112,7 +112,7 @@ resource "aws_iam_role_policy" "bedrock_service_role_policy" {
 # Agent 1 Internal Call DynamoDB
 # Bedrock Agent
 resource "aws_bedrockagent_agent" "example" {
-  agent_name                  = "my-agent-name"
+  agent_name                  = "my-agent-name-${random_string.global_suffix.result}"
   agent_resource_role_arn     = aws_iam_role.bedrock_service_role.arn
   idle_session_ttl_in_seconds = 500
   foundation_model            = var.foundationmodel
