@@ -4,7 +4,7 @@ data "aws_region" "current" {}
 
 
 resource "aws_iam_role" "lambda_role" {
-  name = "lambda_awsjam_test"
+  name = "lambda_awsjam_test-${random_string.global_suffix.result}"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"

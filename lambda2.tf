@@ -1,12 +1,12 @@
 
 # Create S3 bucket (optional, for storing fetched data)
 resource "aws_s3_bucket" "data_bucket" {
-  bucket = "internet-data-storage-bucket"
+  bucket = "internet-data-storage-bucket-${random_string.global_suffix.result}"
 }
 
 # IAM Role for Lambda
 resource "aws_iam_role" "lambda_exec_role" {
-  name = "lambda_exec_role"
+  name = "lambda_exec_role-${random_string.global_suffix.result}"
 
   assume_role_policy = jsonencode({
     "Version": "2012-10-17",
