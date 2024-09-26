@@ -49,7 +49,7 @@ data "aws_s3_object" "schema_file" {
 
 # Create the IAM role
 resource "aws_iam_role" "bedrock_service_role" {
-  name = "bedrock-agent-service-role"
+  name = "bedrock-agent-service-role-${random_string.global_suffix.result}"
 
   # Define the trust relationship (assume role policy)
   assume_role_policy = jsonencode({
