@@ -140,33 +140,33 @@ resource "aws_bedrockagent_agent_action_group" "example" {
 }
 
 
-# Agent 2 External Call with API GW
-resource "aws_bedrockagent_agent" "external" {
-  agent_name                  = "external-agent"
-  agent_resource_role_arn     = aws_iam_role.bedrock_service_role.arn
-  idle_session_ttl_in_seconds = 500
-  foundation_model            = var.foundationmodel
-  instruction                 = file("${path.module}/input_data/prompt.txt")
-  tags = {
-    "Environment" = "Production"
-    "Project"     = "AI-Project"
-  } 
-}
+# # Agent 2 External Call with API GW
+# resource "aws_bedrockagent_agent" "external" {
+#   agent_name                  = "external-agent"
+#   agent_resource_role_arn     = aws_iam_role.bedrock_service_role.arn
+#   idle_session_ttl_in_seconds = 500
+#   foundation_model            = var.foundationmodel
+#   instruction                 = file("${path.module}/input_data/prompt.txt")
+#   tags = {
+#     "Environment" = "Production"
+#     "Project"     = "AI-Project"
+#   } 
+# }
 
-# Bedrock Agent 2 Action Group
-resource "aws_bedrockagent_agent_action_group" "external" {
-  action_group_name          = "external-ag"
-  agent_id                   = aws_bedrockagent_agent.external.id
-  agent_version              = "DRAFT"
-  skip_resource_in_use_check = true
+# # Bedrock Agent 2 Action Group
+# resource "aws_bedrockagent_agent_action_group" "external" {
+#   action_group_name          = "external-ag"
+#   agent_id                   = aws_bedrockagent_agent.external.id
+#   agent_version              = "DRAFT"
+#   skip_resource_in_use_check = true
   
-   action_group_executor {
-    lambda = aws_lambda_function.fetch_data_function.arn
-    }
+#    action_group_executor {
+#     lambda = aws_lambda_function.fetch_data_function.arn
+#     }
 
-    api_schema {
-      payload = file("input_data/api.yaml")
-    }
-}
+#     api_schema {
+#       payload = file("input_data/api.yaml")
+#     }
+# }
 
 ################################################################################
