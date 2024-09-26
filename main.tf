@@ -22,10 +22,6 @@ resource "random_string" "global_suffix" {
   upper   = false
 }
 
-resource "aws_s3_bucket" "data_bucket" {
-  bucket = "internet-data-storage-bucket-${random_string.global_suffix.result}"
-}
-
 #####################################
 
  resource "aws_vpc" "main_vpc" {
