@@ -104,6 +104,13 @@ resource "aws_lambda_permission" "api_gateway_invoke" {
   source_arn    = "${aws_apigatewayv2_api.http_api.execution_arn}/*"
 }
 
+resource "aws_lambda_permission" "allow_bedrock2" {
+  statement_id  = "AllowBedrockInvokeExternal"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.fetch_data_function.arn
+  principal     = "bedrock.amazonaws.com"
+  source_arn     = aws_bedrockagent_agent.example.agent_arn
+}
 
 #outputs
 output "api_gateway_url" {
