@@ -112,7 +112,7 @@ resource "aws_iam_role_policy" "bedrock_service_role_policy" {
 # Agent 1 Internal Call DynamoDB
 # Bedrock Agent
 resource "aws_bedrockagent_agent" "example" {
-  agent_name                  = "my-agent-name"
+  agent_name                  = "my-agent-name-${random_string.global_suffix.result}"
   agent_resource_role_arn     = aws_iam_role.bedrock_service_role.arn
   idle_session_ttl_in_seconds = 500
   foundation_model            = var.foundationmodel
