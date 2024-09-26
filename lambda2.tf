@@ -67,52 +67,39 @@ resource "aws_lambda_function" "fetch_data_function" {
   }
 }
 
-# API Gateway to trigger Lambda
-resource "aws_apigatewayv2_api" "http_api" {
-  name          = "fetch-data-api"
-  protocol_type = "HTTP"
-}
+# # API Gateway to trigger Lambda
+# resource "aws_apigatewayv2_api" "http_api" {
+#   name          = "fetch-data-api"
+#   protocol_type = "HTTP"
+# }
 
-# API Gateway Integration with Lambda
-resource "aws_apigatewayv2_integration" "lambda_integration" {
-  api_id           = aws_apigatewayv2_api.http_api.id
-  integration_type = "AWS_PROXY"
-  integration_uri  = aws_lambda_function.fetch_data_function.arn
-  integration_method = "POST"
-}
+# # API Gateway Integration with Lambda
+# resource "aws_apigatewayv2_integration" "lambda_integration" {
+#   api_id           = aws_apigatewayv2_api.http_api.id
+#   integration_type = "AWS_PROXY"
+#   integration_uri  = aws_lambda_function.fetch_data_function.arn
+#   integration_method = "POST"
+# }
 
-# API Gateway Route
-resource "aws_apigatewayv2_route" "lambda_route" {
-  api_id    = aws_apigatewayv2_api.http_api.id
-  route_key = "GET /fetch-data"
-  target    = "integrations/${aws_apigatewayv2_integration.lambda_integration.id}"
-}
+# # API Gateway Route
+# resource "aws_apigatewayv2_route" "lambda_route" {
+#   api_id    = aws_apigatewayv2_api.http_api.id
+#   route_key = "GET /fetch-data"
+#   target    = "integrations/${aws_apigatewayv2_integration.lambda_integration.id}"
+# }
 
-# API Gateway Stage Deployment
-resource "aws_apigatewayv2_stage" "default_stage" {
-  api_id      = aws_apigatewayv2_api.http_api.id
-  name        = "$default"
-  auto_deploy = true
-}
+# # API Gateway Stage Deployment
+# resource "aws_apigatewayv2_stage" "default_stage" {
+#   api_id      = aws_apigatewayv2_api.http_api.id
+#   name        = "$default"
+#   auto_deploy = true
+# }
 
-# Lambda Permission for API Gateway to Invoke
-resource "aws_lambda_permission" "api_gateway_invoke" {
-  statement_id  = "AllowExecutionFromAPIGateway"
-  action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.fetch_data_function.arn
-  principal     = "apigateway.amazonaws.com"
-  source_arn    = "${aws_apigatewayv2_api.http_api.execution_arn}/*"
-}
-
+# Lambda Permission for Bedrock to Invoke
 resource "aws_lambda_permission" "allow_bedrock2" {
   statement_id  = "AllowBedrockInvokeExternal"
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.fetch_data_function.arn
   principal     = "bedrock.amazonaws.com"
   source_arn     = aws_bedrockagent_agent.example.agent_arn
-}
-
-#outputs
-output "api_gateway_url" {
-  value = aws_apigatewayv2_api.http_api.api_endpoint
 }
