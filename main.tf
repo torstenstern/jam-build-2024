@@ -202,14 +202,30 @@ data "aws_ssm_parameter" "amzn2_ami" {
   name = "/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2"
 }
 
+
+# Create an Elastic IP
+resource "aws_eip" "bedrock_eip" {
+  domain = "vpc"
+  tags = {
+    Name = "BedrockEc2EIP"
+  }
+}
+
+# Associate the Elastic IP with the EC2 instance
+resource "aws_eip_association" "bedrock_eip_assoc" {
+  instance_id   = aws_instance.bedrock_ec2.id
+  allocation_id = aws_eip.bedrock_eip.id
+}
+
 resource "aws_instance" "bedrock_ec2" {
-  ami                    = data.aws_ssm_parameter.amzn2_ami.value #"ami-0c55b159cbfafe1f0" # Amazon Linux 2 AMI (Change based on your region)
+  ami                    = data.aws_ssm_parameter.amzn2_ami.value
   instance_type          = "t2.micro"
   iam_instance_profile   = aws_iam_instance_profile.bedrock_ec2_profile.name
   key_name               = data.aws_key_pair.vmseries.key_name
-  associate_public_ip_address = true # To SSH into the instance
+  
+  # Remove this line as we're using an EIP now
+  # associate_public_ip_address = true
 
-  # User data to install AWS CLI, Python, and boto3
   user_data = <<-EOF
     #!/bin/bash
     sudo yum update -y
@@ -219,12 +235,12 @@ resource "aws_instance" "bedrock_ec2" {
     sudo yum install -y aws-cli
   EOF
 
-  subnet_id              = aws_subnet.public_subnet2.id
-  #security_groups        = [aws_security_group.allow_ssh.name]
+  subnet_id = aws_subnet.public_subnet2.id
 
   tags = {
     Name = "BedrockEC2Instance"
   }
+
   root_block_device {
     delete_on_termination = true
     encrypted             = true
@@ -235,6 +251,8 @@ resource "aws_instance" "bedrock_ec2" {
 
 ###### OUTPUTS
 # Output the Public IP of the instance
-output "ec2_public_ip" {
-  value = aws_instance.linux_ec2.public_ip
+# Output the Elastic IP for reference
+output "bedrock_ec2_eip" {
+  value = aws_eip.bedrock_eip.public_ip
+  description = "Elastic IP address associated with the Bedrock EC2 instance"
 }
