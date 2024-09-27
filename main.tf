@@ -51,7 +51,7 @@ resource "random_string" "global_suffix" {
 #####################################
 
  resource "aws_vpc" "main_vpc" {
-   cidr_block = "10.1.1.0/24"
+   cidr_block = "10.1.0.0/16"
    tags = {
      "Name" = "CodeBuid-torsten-testhost"
      }
@@ -88,7 +88,7 @@ resource "aws_subnet" "public_subnet2" {
 resource "aws_route_table" "public_rt" {
   vpc_id = aws_vpc.main_vpc.id
   tags = {
-     "Name" = "CodeBuid-torsten-testhost"
+     "Name" = "RT-Subnet1"
      }
 }
 
@@ -101,6 +101,11 @@ resource "aws_route" "internet_route" {
 
 # Associate Route Table with the Public Subnet
 resource "aws_route_table_association" "public_rt_assoc" {
+  subnet_id      = aws_subnet.public_subnet.id
+  route_table_id = aws_route_table.public_rt.id
+}
+
+resource "aws_route_table_association" "public_rt_assoc2" {
   subnet_id      = aws_subnet.public_subnet.id
   route_table_id = aws_route_table.public_rt.id
 }
@@ -134,21 +139,21 @@ resource "aws_security_group" "allow_ssh" {
   }
 }
 
-# Create an EC2 Instance
-data "aws_ami" "amazon_linux_2" {
-  most_recent = true
-  owners      = ["amazon"]
+# # Create an EC2 Instance
+# data "aws_ami" "amazon_linux_2" {
+#   most_recent = true
+#   owners      = ["amazon"]
 
-  filter {
-    name   = "name"
-    values = ["amzn2-ami-hvm-*-x86_64-gp2"]
-  }
+#   filter {
+#     name   = "name"
+#     values = ["amzn2-ami-hvm-*-x86_64-gp2"]
+#   }
 
-  filter {
-    name   = "virtualization-type"
-    values = ["hvm"]
-  }
-}
+#   filter {
+#     name   = "virtualization-type"
+#     values = ["hvm"]
+#   }
+# }
 
 data "aws_ebs_default_kms_key" "current" {
 }
@@ -157,24 +162,24 @@ data "aws_kms_alias" "current_arn" {
   name = data.aws_ebs_default_kms_key.current.key_arn
 }
 
-resource "aws_instance" "linux_ec2" {
-  ami           = data.aws_ami.amazon_linux_2.id
-  instance_type = "t3.micro"
-  subnet_id     = aws_subnet.public_subnet.id
-  # security_groups = [aws_security_group.allow_ssh.name]
+# resource "aws_instance" "linux_ec2" {
+#   ami           = data.aws_ami.amazon_linux_2.id
+#   instance_type = "t3.micro"
+#   subnet_id     = aws_subnet.public_subnet.id
+#   # security_groups = [aws_security_group.allow_ssh.name]
 
-  tags = {
-    Name = "CodeBuild-Torsten"
-  }
+#   tags = {
+#     Name = "CodeBuild-Torsten"
+#   }
 
-  root_block_device {
-    delete_on_termination = true
-    encrypted             = true
-    kms_key_id            = data.aws_kms_alias.current_arn.target_key_arn
-  }
+#   root_block_device {
+#     delete_on_termination = true
+#     encrypted             = true
+#     kms_key_id            = data.aws_kms_alias.current_arn.target_key_arn
+#   }
 
-  key_name = data.aws_key_pair.vmseries.key_name
-}
+#   key_name = data.aws_key_pair.vmseries.key_name
+# }
 
 ####### EC2 For Bedrock Interaction
 # IAM Role and Policy for Bedrock Access
@@ -264,9 +269,17 @@ resource "aws_instance" "bedrock_ec2" {
   EOF
 
   subnet_id = aws_subnet.public_subnet2.id
+  subnet_id              = aws_subnet.public_subnet.id
+  vpc_security_group_ids = [aws_security_group.allow_ssh.id]
 
   tags = {
     Name = "BedrockEC2Instance"
+  }
+
+    root_block_device {
+    delete_on_termination = true
+    encrypted             = true
+    kms_key_id            = data.aws_kms_alias.current_arn.target_key_arn
   }
 
   root_block_device {
