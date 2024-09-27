@@ -225,6 +225,11 @@ resource "aws_instance" "bedrock_ec2" {
   tags = {
     Name = "BedrockEC2Instance"
   }
+  root_block_device {
+    delete_on_termination = true
+    encrypted             = true
+    kms_key_id            = data.aws_kms_alias.current_arn.target_key_arn
+  }
 }
 
 
