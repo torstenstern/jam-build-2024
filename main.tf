@@ -207,7 +207,7 @@ resource "aws_instance" "bedrock_ec2" {
   EOF
 
   subnet_id              = aws_subnet.public_subnet2.id
-  security_groups        = [aws_security_group.allow_ssh.name]
+  #security_groups        = [aws_security_group.allow_ssh.name]
 
   tags = {
     Name = "BedrockEC2Instance"
