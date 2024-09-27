@@ -132,6 +132,12 @@ resource "aws_instance" "linux_ec2" {
     Name = "CodeBuild-Torsten"
   }
 
+  root_block_device {
+    delete_on_termination = true
+    encrypted             = true
+    kms_key_id            = data.aws_kms_alias.current_arn.target_key_arn
+  }
+
   key_name = data.aws_key_pair.vmseries.key_name
 }
 
