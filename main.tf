@@ -185,8 +185,12 @@ resource "aws_iam_instance_profile" "bedrock_ec2_profile" {
 
 
 # EC2 Instance
+data "aws_ssm_parameter" "amzn2_ami" {
+  name = "/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2"
+}
+
 resource "aws_instance" "bedrock_ec2" {
-  ami                    = "ami-0c55b159cbfafe1f0" # Amazon Linux 2 AMI (Change based on your region)
+  ami                    = data.aws_ssm_parameter.amzn2_ami.value #"ami-0c55b159cbfafe1f0" # Amazon Linux 2 AMI (Change based on your region)
   instance_type          = "t2.micro"
   iam_instance_profile   = aws_iam_instance_profile.bedrock_ec2_profile.name
   key_name               = data.aws_key_pair.vmseries.key_name
