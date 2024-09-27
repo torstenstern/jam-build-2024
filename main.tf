@@ -269,7 +269,6 @@ resource "aws_instance" "bedrock_ec2" {
   EOF
 
   subnet_id = aws_subnet.public_subnet2.id
-  subnet_id              = aws_subnet.public_subnet.id
   vpc_security_group_ids = [aws_security_group.allow_ssh.id]
 
   tags = {
@@ -277,12 +276,6 @@ resource "aws_instance" "bedrock_ec2" {
   }
 
     root_block_device {
-    delete_on_termination = true
-    encrypted             = true
-    kms_key_id            = data.aws_kms_alias.current_arn.target_key_arn
-  }
-
-  root_block_device {
     delete_on_termination = true
     encrypted             = true
     kms_key_id            = data.aws_kms_alias.current_arn.target_key_arn
