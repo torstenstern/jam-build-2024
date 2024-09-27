@@ -1,3 +1,29 @@
+## Determine which AZs are in the region and have support for instance type
+
+data "aws_availability_zones" "available" {
+  state = "available"
+}
+
+data "aws_ec2_instance_type_offerings" "t3_micro" {
+  filter {
+    name   = "instance-type"
+    values = ["t3.micro"]
+  }
+
+  filter {
+    name   = "location"
+    values = data.aws_availability_zones.available.names
+  }
+
+  location_type = "availability-zone"
+}
+
+locals {
+  supported_azs = toset(data.aws_ec2_instance_type_offerings.t3_micro.locations)
+}
+
+
+
 resource "aws_vpc" "vpc" {
   cidr_block = "10.2.0.0/16"
   tags = {
@@ -43,6 +69,7 @@ resource "aws_internet_gateway" "main_igw" {
 resource "aws_subnet" "public_subnet" {
   vpc_id            = aws_vpc.main_vpc.id
   cidr_block        = "10.1.1.0/25"
+  availability_zone = element(tolist(local.supported_azs), 0)
   tags = {
      "Name" = "CodeBuid-torsten-testhost"
      }
@@ -51,6 +78,7 @@ resource "aws_subnet" "public_subnet" {
 resource "aws_subnet" "public_subnet2" {
   vpc_id            = aws_vpc.main_vpc.id
   cidr_block        = "10.1.1.128/25"
+  availability_zone = element(tolist(local.supported_azs), 1)
   tags = {
      "Name" = "CodeBuid-torsten-testhost"
      }
