@@ -77,6 +77,11 @@ resource "aws_route_table_association" "public_rt_assoc" {
   route_table_id = aws_route_table.public_rt.id
 }
 
+resource "aws_route_table_association" "public_rt_assoc2" {
+  subnet_id      = aws_subnet.public_subnet2.id
+  route_table_id = aws_route_table.public_rt.id
+}
+
 # Create a Security Group to allow SSH and ICMP (ping)
 resource "aws_security_group" "allow_ssh" {
   vpc_id = aws_vpc.main_vpc.id
