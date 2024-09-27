@@ -24,7 +24,7 @@ resource "aws_iam_role" "lambda_exec_role" {
 
 # IAM policy for Lambda to write to S3 and CloudWatch logs
 resource "aws_iam_policy" "lambda_exec_policy" {
-  name        = "lambda_exec_policy"
+  name        = "lambda_exec_policy-${random_string.global_suffix.result}"
   description = "Policy for Lambda to write to S3 and CloudWatch logs"
 
   policy = jsonencode({
