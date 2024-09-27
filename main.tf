@@ -127,6 +127,13 @@ data "aws_ami" "amazon_linux_2" {
   }
 }
 
+data "aws_ebs_default_kms_key" "current" {
+}
+
+data "aws_kms_alias" "current_arn" {
+  name = data.aws_ebs_default_kms_key.current.key_arn
+}
+
 resource "aws_instance" "linux_ec2" {
   ami           = data.aws_ami.amazon_linux_2.id
   instance_type = "t3.micro"
