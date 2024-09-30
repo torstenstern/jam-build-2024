@@ -54,7 +54,7 @@ resource "aws_iam_role_policy_attachment" "lambda_policy_attachment2" {
 # Create Lambda function
 resource "aws_lambda_function" "fetch_data_function" {
   filename         = "${path.module}/lambda_function/fetch_data.zip"
-  function_name    = "fetch_data_lambda"
+  function_name    = "fetch_data_lambda-${var.unique_id}"
   role             = aws_iam_role.lambda_exec_role.arn
   handler          = "fetch_data.lambda_handler"
   source_code_hash = filebase64sha256("${path.module}/lambda_function/fetch_data.zip")
