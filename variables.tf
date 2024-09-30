@@ -12,7 +12,7 @@ variable "dynamodb_table_name" {
 
 variable "foundationmodel" {
   description = "Define Foundation Model"
-  default = "amazon.titan-text-premier-v1:0"
+  default = "amazon.titan-text-lite-v1"
 }
 
 variable "unique_id" {
