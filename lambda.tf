@@ -4,7 +4,7 @@ data "aws_region" "current" {}
 
 
 resource "aws_iam_role" "lambda_role" {
-  name = "lambda_awsjam_test-${random_string.global_suffix.result}"
+  name = "lambda_awsjam_test-${var.unique_id}"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -70,7 +70,7 @@ resource "aws_iam_role_policy_attachment" "dynamodb_read_only_access" {
 }
 
 resource "aws_lambda_function" "my_lambda" {
-  function_name = "MyLambdaFunction-${random_string.global_suffix.result}"  # Replace with your desired Lambda function name
+  function_name = "MyLambdaFunction-${var.unique_id}"  # Replace with your desired Lambda function name
   role          = aws_iam_role.lambda_role.arn
   handler       = "dummy_lambda.lambda_handler"  # Adjust based on your handler function
   runtime       = "python3.8"  # Replace with your desired runtime

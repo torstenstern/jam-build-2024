@@ -40,14 +40,6 @@ data "aws_key_pair" "vmseries" {
   }
 }
 
-# Random string for resource naming of buckets, IAM roles, etc.
-
-resource "random_string" "global_suffix" {
-  length  = 8
-  special = false
-  upper   = false
-}
-
 #####################################
 
  resource "aws_vpc" "main_vpc" {
@@ -184,7 +176,7 @@ data "aws_kms_alias" "current_arn" {
 ####### EC2 For Bedrock Interaction
 # IAM Role and Policy for Bedrock Access
 resource "aws_iam_role" "bedrock_ec2_role" {
-  name = "bedrock-ec2-role-${random_string.global_suffix.result}"
+  name = "bedrock-ec2-role-${var.unique_id}"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
@@ -199,7 +191,7 @@ resource "aws_iam_role" "bedrock_ec2_role" {
 }
 
 resource "aws_iam_policy" "bedrock_policy" {
-  name        = "bedrock-access-policy-${random_string.global_suffix.result}"
+  name        = "bedrock-access-policy-${var.unique_id}"
   description = "Policy to access AWS Bedrock models"
   policy      = jsonencode({
     Version = "2012-10-17",
@@ -224,7 +216,7 @@ resource "aws_iam_role_policy_attachment" "attach_policy" {
 
 # Instance profile for the EC2 instance
 resource "aws_iam_instance_profile" "bedrock_ec2_profile" {
-  name = "bedrock-ec2-instance-profile-${random_string.global_suffix.result}"
+  name = "bedrock-ec2-instance-profile-${var.unique_id}"
   role = aws_iam_role.bedrock_ec2_role.name
 }
 
