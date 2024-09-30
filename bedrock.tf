@@ -115,7 +115,7 @@ resource "aws_bedrockagent_agent" "example" {
   agent_name                  = "my-agent-name-${var.unique_id}"
   agent_resource_role_arn     = aws_iam_role.bedrock_service_role.arn
   idle_session_ttl_in_seconds = 500
-  foundation_model            = var.foundationmodel
+  foundation_model = var.region == "us-east-1" ? var.foundationmodel : var.alternative_foundationmodel
   instruction                 = file("${path.module}/input_data/prompt.txt")
   tags = {
     "Environment" = "Production"
