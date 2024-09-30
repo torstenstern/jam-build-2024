@@ -11,7 +11,7 @@ variable "dynamodb_table_name" {
 }
 
 variable "foundationmodel" {
-  description = "Define Foundation Model"
+  description = "Define Foundation Model. This is only available in us-east-1"
   default = "amazon.titan-text-premier-v1:0"
 }
 
