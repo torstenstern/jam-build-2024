@@ -18,5 +18,5 @@ variable "foundationmodel" {
 variable "unique_id" {
   description = "String suffix to apply to resource names that need to be unique"
   type        = string
-  default     = ""
+  default     = "test"
 }
