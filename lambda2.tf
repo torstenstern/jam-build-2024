@@ -1,12 +1,12 @@
 
 # Create S3 bucket (optional, for storing fetched data)
 resource "aws_s3_bucket" "data_bucket" {
-  bucket = "internet-data-storage-bucket-${random_string.global_suffix.result}"
+  bucket = "internet-data-storage-bucket-${var.unique_id}"
 }
 
 # IAM Role for Lambda
 resource "aws_iam_role" "lambda_exec_role" {
-  name = "lambda_exec_role-${random_string.global_suffix.result}"
+  name = "lambda_exec_role-${var.unique_id}"
 
   assume_role_policy = jsonencode({
     "Version": "2012-10-17",
@@ -24,7 +24,7 @@ resource "aws_iam_role" "lambda_exec_role" {
 
 # IAM policy for Lambda to write to S3 and CloudWatch logs
 resource "aws_iam_policy" "lambda_exec_policy" {
-  name        = "lambda_exec_policy-${random_string.global_suffix.result}"
+  name        = "lambda_exec_policy-${var.unique_id}"
   description = "Policy for Lambda to write to S3 and CloudWatch logs"
 
   policy = jsonencode({

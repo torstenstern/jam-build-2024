@@ -14,3 +14,9 @@ variable "foundationmodel" {
   description = "Define Foundation Model"
   default = "amazon.titan-text-premier-v1:0"
 }
+
+variable "unique_id" {
+  description = "String suffix to apply to resource names that need to be unique"
+  type        = string
+  default     = ""
+}

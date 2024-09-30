@@ -1,3 +1,29 @@
+## Determine which AZs are in the region and have support for instance type
+
+data "aws_availability_zones" "available" {
+  state = "available"
+}
+
+data "aws_ec2_instance_type_offerings" "t3_micro" {
+  filter {
+    name   = "instance-type"
+    values = ["t3.micro"]
+  }
+
+  filter {
+    name   = "location"
+    values = data.aws_availability_zones.available.names
+  }
+
+  location_type = "availability-zone"
+}
+
+locals {
+  supported_azs = toset(data.aws_ec2_instance_type_offerings.t3_micro.locations)
+}
+
+
+
 resource "aws_vpc" "vpc" {
   cidr_block = "10.2.0.0/16"
   tags = {
@@ -12,14 +38,6 @@ data "aws_key_pair" "vmseries" {
     name   = "key-name"
     values = ["AWSLabsKeyPair*"]
   }
-}
-
-# Random string for resource naming of buckets, IAM roles, etc.
-
-resource "random_string" "global_suffix" {
-  length  = 8
-  special = false
-  upper   = false
 }
 
 #####################################
@@ -43,8 +61,18 @@ resource "aws_internet_gateway" "main_igw" {
 resource "aws_subnet" "public_subnet" {
   vpc_id            = aws_vpc.main_vpc.id
   cidr_block        = "10.1.1.0/25"
+  availability_zone = element(tolist(local.supported_azs), 0)
   tags = {
-     "Name" = "Subnet1"
+     "Name" = "CodeBuid-torsten-testhost"
+     }
+}
+
+resource "aws_subnet" "public_subnet2" {
+  vpc_id            = aws_vpc.main_vpc.id
+  cidr_block        = "10.1.1.128/25"
+  availability_zone = element(tolist(local.supported_azs), 1)
+  tags = {
+     "Name" = "CodeBuid-torsten-testhost"
      }
 }
 
@@ -148,7 +176,7 @@ data "aws_kms_alias" "current_arn" {
 ####### EC2 For Bedrock Interaction
 # IAM Role and Policy for Bedrock Access
 resource "aws_iam_role" "bedrock_ec2_role" {
-  name = "bedrock-ec2-role-${random_string.global_suffix.result}"
+  name = "bedrock-ec2-role-${var.unique_id}"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
@@ -163,7 +191,7 @@ resource "aws_iam_role" "bedrock_ec2_role" {
 }
 
 resource "aws_iam_policy" "bedrock_policy" {
-  name        = "bedrock-access-policy-${random_string.global_suffix.result}"
+  name        = "bedrock-access-policy-${var.unique_id}"
   description = "Policy to access AWS Bedrock models"
   policy      = jsonencode({
     Version = "2012-10-17",
@@ -188,7 +216,7 @@ resource "aws_iam_role_policy_attachment" "attach_policy" {
 
 # Instance profile for the EC2 instance
 resource "aws_iam_instance_profile" "bedrock_ec2_profile" {
-  name = "bedrock-ec2-instance-profile-${random_string.global_suffix.result}"
+  name = "bedrock-ec2-instance-profile-${var.unique_id}"
   role = aws_iam_role.bedrock_ec2_role.name
 }
 
@@ -199,14 +227,30 @@ data "aws_ssm_parameter" "amzn2_ami" {
   name = "/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2"
 }
 
+
+# Create an Elastic IP
+resource "aws_eip" "bedrock_eip" {
+  domain = "vpc"
+  tags = {
+    Name = "BedrockEc2EIP"
+  }
+}
+
+# Associate the Elastic IP with the EC2 instance
+resource "aws_eip_association" "bedrock_eip_assoc" {
+  instance_id   = aws_instance.bedrock_ec2.id
+  allocation_id = aws_eip.bedrock_eip.id
+}
+
 resource "aws_instance" "bedrock_ec2" {
-  ami                    = data.aws_ssm_parameter.amzn2_ami.value #"ami-0c55b159cbfafe1f0" # Amazon Linux 2 AMI (Change based on your region)
+  ami                    = data.aws_ssm_parameter.amzn2_ami.value
   instance_type          = "t2.micro"
   iam_instance_profile   = aws_iam_instance_profile.bedrock_ec2_profile.name
   key_name               = data.aws_key_pair.vmseries.key_name
-  associate_public_ip_address = true # To SSH into the instance
+  
+  # Remove this line as we're using an EIP now
+  # associate_public_ip_address = true
 
-  # User data to install AWS CLI, Python, and boto3
   user_data = <<-EOF
     #!/bin/bash
     sudo yum update -y
@@ -216,7 +260,7 @@ resource "aws_instance" "bedrock_ec2" {
     sudo yum install -y aws-cli
   EOF
 
-  subnet_id              = aws_subnet.public_subnet.id
+  subnet_id = aws_subnet.public_subnet2.id
   vpc_security_group_ids = [aws_security_group.allow_ssh.id]
 
   tags = {
@@ -233,6 +277,8 @@ resource "aws_instance" "bedrock_ec2" {
 
 ###### OUTPUTS
 # Output the Public IP of the instance
-output "ec2_public_ip" {
-  value = aws_instance.bedrock_ec2.public_ip
+# Output the Elastic IP for reference
+output "bedrock_ec2_eip" {
+  value = aws_eip.bedrock_eip.public_ip
+  description = "Elastic IP address associated with the Bedrock EC2 instance"
 }
